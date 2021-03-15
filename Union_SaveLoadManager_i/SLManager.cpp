@@ -52,9 +52,7 @@ namespace GOTHIC_ENGINE {
 
 		gameMan->savegameManager->GetSavegame( slot )->SetName( slotName );
 
-#if ENGINE != Engine_G1A
-		gameMan->Write_Savegame( slot );
-#endif // ENGINE != Engine_G1A
+		ogame->WriteSavegame( slot, 1 );
 
 		printWin( slotStr + " " + ToStr slot );
 		gameMan->savegameManager->Reinit();
@@ -73,10 +71,7 @@ namespace GOTHIC_ENGINE {
 			player
 			&& player->fmode == NPC_WEAPON_NONE
 			&& oCInformationManager::GetInformationManager().HasFinished()
-			&& player->GetBodyState() != BS_FALL
-			&& player->GetBodyState() != BS_MOBINTERACT
-			&& player->GetBodyState() != 32782 // ?? FIXME
-			&& player->GetBodyState() != 32784 // ?? FIXME
+			&& player->anictrl->state == zCAIPlayer::zMV_STATE_STAND
 			&& !player->inventory2.IsOpen()
 			&& !ogame->game_testmode
 			&& player->GetAnictrl()->walkmode != BS_SWIM
@@ -112,9 +107,7 @@ namespace GOTHIC_ENGINE {
 
 		gameMan->savegameManager->GetSavegame( currSlot )->SetName( nameQSaveGame + ToStr numberSave );
 
-#if ENGINE != Engine_G1A
-		gameMan->Write_Savegame( currSlot );
-#endif // ENGINE != Engine_G1A
+		ogame->WriteSavegame( currSlot, 1 );
 
 		printWin( slotStr + " " + ToStr currSlot );
 
