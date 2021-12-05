@@ -67,8 +67,15 @@ namespace GOTHIC_ENGINE {
 
 
 	bool SLManager::CanSave() {
+		oHEROSTATUS& status = oCZoneMusic::s_herostatus;
+		if(status && status == oHEROSTATUS::oHERO_STATUS_FGT) {
+			return false;
+		}
+
 		return (
 			player
+			&& player->IsHuman()
+			&& !ogame->singleStep
 			&& player->fmode == NPC_WEAPON_NONE
 			&& oCInformationManager::GetInformationManager().HasFinished()
 			&& player->anictrl->state == zCAIPlayer::zMV_STATE_STAND
@@ -123,6 +130,13 @@ namespace GOTHIC_ENGINE {
 	void SLManager::LoadGameSL() {
 		int lastSlot = zoptions->ReadInt( "SLManager", "lastSaveSlotSL", 9 );
 
+		//
+#ifdef __G1A
 		ogame->LoadSavegame( lastSlot, lastSlot );
+#else
+		gameMan->Read_Savegame(lastSlot);
+#endif // __G1A
+
+		
 	}
 }
