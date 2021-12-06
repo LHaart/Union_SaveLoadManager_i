@@ -106,15 +106,22 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-
+	
 
 	void SLManager::SaveGameSL() {
 		int currSlot = GetCurrentSlotSave();
 		int numberSave = zoptions->ReadInt( "SLManager", "numberSaveSL", 0 );
+		zSTRING saveName = nameQSaveGame + ToStr numberSave;
+		gameMan->savegameManager->GetSavegame( currSlot )->SetName( saveName );
 
-		gameMan->savegameManager->GetSavegame( currSlot )->SetName( nameQSaveGame + ToStr numberSave );
+		
 
-		ogame->WriteSavegame( currSlot, 1 );
+#if ENGINE == Engine_G1A
+		ogame->WriteSavegame( currSlot, currSlot );
+#else
+		gameMan->Write_Savegame( currSlot );
+#endif // __G1A
+
 
 		printWin( slotStr + " " + ToStr currSlot );
 
@@ -131,7 +138,7 @@ namespace GOTHIC_ENGINE {
 		int lastSlot = zoptions->ReadInt( "SLManager", "lastSaveSlotSL", 9 );
 
 		//
-#ifdef __G1A
+#if ENGINE == Engine_G1A
 		ogame->LoadSavegame( lastSlot, lastSlot );
 #else
 		gameMan->Read_Savegame(lastSlot);
